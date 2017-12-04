@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/custom.css">
+</head>
+<body>
+    <!-- <div id="app">
+        <p>Start Chat</p>
+        <p v-for="log in logs">{{ log }}</p>
+        <input type="text" v-model="data">
+        <ul>
+            <li v-for="item in items">{{item}}</li>
+        </ul>
+        <button v-on:click="sendChat">Submit</button>
+    </div> -->
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">NyanChat</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><a href="#">Create New Room +</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li><a href="#">Okekekek</a></li>
+                </ul>
+            </div>
+            <div class="col-md-8" id="app">
+                <div class="card">
+                    <div class="card-body body-chat">
+                        <blockquote v-for="item in items">
+                            {{ item }}
+                        </blockquote>
+                    </div>
+                    <div>
+                        <textarea class="form-control" rows="3" v-model="data"></textarea>
+                        <button type="button" class="btn btn-primary" v-on:click="sendChat">Send</button>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:8080');
+        new Vue({
+            el: '#app',
+            data : {
+                items: [],
+                data: '',
+                logs: []
+            },
+            mounted() {
+                var item = this.items
+                var logs = this.logs
+                socket.on('log', function(data){
+                    logs.push(data)
+                })
+                socket.on('get-chat', function(data){
+                    item.push(data)
+                })
+            },
+            methods: {
+                sendChat: function(){
+                    socket.emit('send-chat', this.data)
+                    this.data = ''
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
