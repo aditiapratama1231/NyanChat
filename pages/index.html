@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../styles/custom.css">
 </head>
 <body>
@@ -18,15 +20,35 @@
         </ul>
         <button v-on:click="sendChat">Submit</button>
     </div> -->
-
+<div id="app">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">NyanChat</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Login</a></li>
+                <li class="active">
+                    <a href="#">Home</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        Join 
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" id="formLogin">
+                        <div class="row">
+                            <div class="container-fluid dropdown-item">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Join</label>
+                                        <input type="text" class="form-control" v-model="username">
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-sm" v-on:click="sendUser">Join</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </nav>
@@ -54,15 +76,13 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <p>Input username</p>
-                <input type="text" size="15" v-model="username">
-                <button type="button" class="btn btn-primary btn-xs" v-on:click="sendUser">Submit</button>
                 <ul>
                     <li v-for="user in users"> {{ user }} has join</li>
                 </ul>
             </div>
         </div>
     </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
