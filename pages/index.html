@@ -30,7 +30,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid" id="app">
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
@@ -40,7 +40,7 @@
                     <li><a href="#">Okekekek</a></li>
                 </ul>
             </div>
-            <div class="col-md-8" id="app">
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-body body-chat">
                         <blockquote v-for="item in items">
@@ -53,34 +53,52 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-2">
+                <p>Input username</p>
+                <input type="text" size="15" v-model="username">
+                <button type="button" class="btn btn-primary btn-xs" v-on:click="sendUser">Submit</button>
+                <ul>
+                    <li v-for="user in users"> {{ user }} has join</li>
+                </ul>
+            </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
     <script>
-        var socket = io.connect('https://nyanchat.herokuapp.com/');
+        var socket = io.connect('http://localhost:8080');
         new Vue({
             el: '#app',
             data : {
                 items: [],
                 data: '',
-                logs: []
+                username: '',
+                logs: [],
+                users: []
             },
             mounted() {
-                var item = this.items
+                var items = this.items
                 var logs = this.logs
+                var users = this.users
                 socket.on('log', function(data){
                     logs.push(data)
                 })
                 socket.on('get-chat', function(data){
-                    item.push(data)
+                    items.push(data)
+                })
+                socket.on('get-user', function(data){
+                    users.push(data)
                 })
             },
             methods: {
                 sendChat: function(){
                     socket.emit('send-chat', this.data)
                     this.data = ''
+                },
+                sendUser: function(){
+                    socket.emit('send-user', this.username)
+                    this.username = ''
                 }
             }
         })

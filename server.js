@@ -15,11 +15,14 @@ io.on('connection', function (socket) {
     io.emit('log', 'user connected')
 
     socket.on('send-chat', function (data) {
-        console.log(data)
         io.emit('get-chat', data)
     });
+
+    socket.on('send-user', function(data){
+        io.emit('get-user', data)
+    })
 });
 
 server.listen(port, function(){
-    console.log('Server running in port : 8080')
+    console.log('Server running in port : ' + port)
 })
