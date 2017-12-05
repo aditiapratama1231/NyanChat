@@ -11,16 +11,6 @@
     <link rel="stylesheet" href="../styles/custom.css">
 </head>
 <body>
-    <!-- <div id="app">
-        <p>Start Chat</p>
-        <p v-for="log in logs">{{ log }}</p>
-        <input type="text" v-model="data">
-        <ul>
-            <li v-for="item in items">{{item}}</li>
-        </ul>
-        <button v-on:click="sendChat">Submit</button>
-    </div> -->
-<div id="app">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -52,7 +42,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid" id="app">
+    <div class="container-fluid" id="chat">
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
@@ -71,25 +61,23 @@
                     </div>
                     <div>
                         <textarea class="form-control" rows="3" v-model="data"></textarea>
-                        <button type="button" class="btn btn-primary" v-on:click="sendChat">Send</button>                        
+                        <button type="button" class="btn btn-primary" v-on:click="sendChat">Send</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-2">
-                <ul>
                     <li v-for="user in users"> {{ user }} has join</li>
                 </ul>
             </div>
         </div>
     </div>
-</div>
-
+</body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
     <script>
         var socket = io.connect('https://nyanchat.herokuapp.com/');
         new Vue({
-            el: '#app',
+            el: '#chat',
             data : {
                 items: [],
                 data: '',
@@ -116,6 +104,26 @@
                     socket.emit('send-chat', this.data)
                     this.data = ''
                 },
+                sendUser: function(){
+                    socket.emit('send-user', this.username)
+                    this.username = ''
+                }
+            }
+        })
+
+        new Vue({
+            el: "#formLogin",
+            data: {
+                username: '',
+                users : []
+            },
+            mounted(){
+                var users = this.users
+                socket.on('get-chat', function(data){
+                    users.push(data)
+                })
+            },
+            methods: {
                 sendUser: function(){
                     socket.emit('send-user', this.username)
                     this.username = ''
